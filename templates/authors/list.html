@@ -4,7 +4,7 @@
 
 {%- block seo %}
   {{- super() }}
-  {%- set title = term.name ~ " authors" %}
+  {%- set title = "Authors" %}
 
   {%- if config.title %}
     {%- set title_addition = title_separator ~ config.title %}
@@ -19,12 +19,17 @@
 
 {%- block content %}
     <div>
-      <h2>{{ term.name }}</h2>
-      {%- for year, posts in term.pages | group_by(attribute="year") %}
-      <h3 class="tpad">{{ year }}</h3>
-      {%- for page in posts %}
+      <div class="c">
+        <h1>{{ terms | length }} {{ macros::translate(key="Categories", default="Categories", i18n=i18n) }} </h1>
+        <p>{% for term in terms %} [<a href="#{{ term.name }}">{{ term.name }}</a>]<sup>{{ term.pages | length }}</sup> {% endfor %}</p>
+      </div>
+      {%- for term in terms %}
+      <h2 class="tpad" id="{{ term.name }}"><a href="{{ term.permalink | safe }}{%- if uglyurls %}index.html{%- endif %}">{{ term.name }}</a></h2>
+      {%- for page in term.pages %}
       <p><a href="{{ page.permalink | safe }}{%- if uglyurls %}index.html{%- endif %}">{{ page.title }}</a> - <time datetime="{{ page.date }}">{{ page.date | date(format="%F") }}</time></p>
       {%- endfor %}
       {%- endfor %}
     </div>
 {%- endblock content %}
+
+
